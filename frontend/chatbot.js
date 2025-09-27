@@ -153,3 +153,11 @@ class ChatWidget {
 window.onload = () => {
   new ChatWidget("chat-widget", "http://localhost:5000/api");
 };
+function appendMessage(sender, message){
+  const chatbox = document.querySelector(".chatbox"); // adjust selector if needed
+  const msgDiv = document.createElement("div");
+  msgDiv.classList.add("message");
+  msgDiv.innerHTML = `<strong>${sender}:</strong> ${message}`;
+  chatbox.appendChild(msgDiv);
+  chatbox.scrollTop = chatbox.scrollHeight;
+}

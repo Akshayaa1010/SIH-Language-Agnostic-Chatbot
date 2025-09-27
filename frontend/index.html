@@ -12,16 +12,16 @@
   <header>
     <div class="logo">XYZ College</div>
     <nav>
-      <a href="#">Home</a>
-      <a href="#">About</a>
-      <a href="#">Admissions</a>
-      <a href="#">Departments</a>
+      <a href="#" class="nav-link" data-target="home-section">Home</a>
+      <a href="#" class="nav-link" data-target="about-section">About</a>
+      <a href="#" class="nav-link" data-target="departments-section">Departments</a>
+      <a href="#" class="nav-link" data-target="faqs-section">FAQs</a>
       <a href="#">Contact</a>
     </nav>
   </header>
 
-  <!-- Hero Section -->
-  <section class="hero">
+  <!-- Sections -->
+  <section id="home-section" class="hero">
     <div class="hero-content">
       <h1>Welcome to XYZ College</h1>
       <p>Your one-stop portal for fees, scholarships, timetables, and student support.</p>
@@ -29,21 +29,30 @@
     </div>
   </section>
 
-  <!-- Main Content -->
-  <main>
-    <section class="info-section">
-      <h2>About Our College</h2>
-      <p>XYZ College is committed to providing quality education, state-of-the-art facilities, and student support in multiple languages.</p>
-    </section>
-    <section class="faqs">
-      <h2>Common Queries</h2>
-      <ul>
-        <li>Fee deadlines and payment options</li>
-        <li>Scholarship forms and eligibility</li>
-        <li>Timetable updates and exam schedules</li>
-      </ul>
-    </section>
-  </main>
+  <section id="about-section" class="info-section">
+    <h2>About Our College</h2>
+    <p>XYZ College is committed to providing quality education, state-of-the-art facilities, and student support in multiple languages.</p>
+  </section>
+
+  <section id="departments-section" class="info-section">
+    <h2>Departments</h2>
+    <ul id="dept-list">
+      <li>CSE - Computer Science & Engineering</li>
+      <li>ECE - Electronics & Communication Engineering</li>
+      <li>EEE - Electrical & Electronics Engineering</li>
+      <li>ME - Mechanical Engineering</li>
+      <li>Civil - Civil Engineering</li>
+    </ul>
+  </section>
+
+  <section id="faqs-section" class="faqs">
+    <h2>Common Queries</h2>
+    <ul>
+      <li>Fee deadlines and payment options</li>
+      <li>Scholarship forms and eligibility</li>
+      <li>Timetable updates and exam schedules</li>
+    </ul>
+  </section>
 
   <!-- Footer -->
   <footer>
@@ -55,5 +64,15 @@
   <div id="chat-widget"></div>
 
   <script src="chatbot.js"></script>
+  <script>
+    // Smooth scroll for navbar links
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.getElementById(link.dataset.target);
+        target.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  </script>
 </body>
 </html>

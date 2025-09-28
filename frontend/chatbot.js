@@ -139,12 +139,3 @@ class ChatWidget {
 window.onload = () => {
   new ChatWidget("chat-widget", "http://localhost:5000");
 };
-// Get uploaded documents
-app.get("/documents", (req, res) => {
-  fs.readdir("uploads", (err, files) => {
-    if (err) return res.status(500).json({ error: "Cannot read uploads" });
-    // Return only PDF or TXT
-    const docs = files.filter(f => f.endsWith(".pdf") || f.endsWith(".txt"));
-    res.json(docs);
-  });
-});

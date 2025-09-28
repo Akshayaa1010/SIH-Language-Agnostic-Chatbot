@@ -21,12 +21,21 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.post("/ask", async (req, res) => {
   const { question } = req.body;
   // your logic to answer
-  res.json({ answer: "This is a placeholder response" });
+  res.json({answer: "This is a placeholder response"});
 });
 
 // ✅ Simple test route (no PDF/test folder)
 app.get("/", (req, res) => {
   res.send("Backend is running 🚀");
+});
+// Get uploaded documents
+app.get("/documents", (req, res) => {
+  fs.readdir("uploads", (err, files) => {
+    if (err) return res.status(500).json({ error: "Cannot read uploads" });
+    // Return only PDF or TXT
+    const docs = files.filter(f => f.endsWith(".pdf") || f.endsWith(".txt"));
+    res.json(docs);
+  });
 });
 
 // Start server

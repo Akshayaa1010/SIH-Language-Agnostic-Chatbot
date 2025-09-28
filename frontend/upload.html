@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Document</title>
+</head>
+<body>
+  <h2>Admin Upload Portal</h2>
+  <form id="uploadForm" enctype="multipart/form-data">
+      <input type="file" name="file" />
+      <button type="submit">Upload Document</button>
+  </form>
+
+  <script>
+  document.getElementById("uploadForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData();
+      const fileInput = document.querySelector('input[name="file"]');
+      formData.append("file", fileInput.files[0]);
+
+      const resp = await fetch("http://localhost:5000/upload", {
+          method: "POST",
+          body: formData
+      });
+      const data = await resp.json();
+      alert(JSON.stringify(data));
+  });
+  </script>
+</body>
+</html>

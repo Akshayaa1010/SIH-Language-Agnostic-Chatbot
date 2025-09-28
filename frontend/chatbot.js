@@ -59,6 +59,7 @@ class ChatWidget {
       chatWindow.style.display = chatWindow.style.display === "flex" ? "none" : "flex";
       chatWindow.style.flexDirection = "column";
     });
+
     document.getElementById("sendBtn").addEventListener("click", () => this._handleSend());
     document.getElementById("chatInput").addEventListener("keypress", (e) => {
       if (e.key === "Enter") this._handleSend();
@@ -82,18 +83,20 @@ class ChatWidget {
     this._showTyping();
 
     try {
-      const resp = await fetch(`${this.apiBase}/chat`, {
+      const resp = await fetch(`${this.apiBase}/ask`, {
         method: "POST",
-        headers: {"Content-Type":"application/json"},
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           sessionId: this.sessionId,
           lang: this.lang,
-          text
+          question: text
         })
       });
+
       const data = await resp.json();
       this._hideTyping();
-      this._appendBotMessage(data.reply, data.suggestions);
+      this._appendBotMessage(data.answer); // suggestions removed for now
+
     } catch (err) {
       this._hideTyping();
       this._appendBotMessage("⚠️ Oops, server not reachable.");
@@ -108,28 +111,11 @@ class ChatWidget {
     this.messageContainer.scrollTop = this.messageContainer.scrollHeight;
   }
 
-  _appendBotMessage(text, suggestions=[]) {
+  _appendBotMessage(text) {
     const msg = document.createElement("div");
     msg.className = "message bot-message";
     msg.textContent = text;
     this.messageContainer.appendChild(msg);
-
-    if (suggestions && suggestions.length > 0) {
-      const quickDiv = document.createElement("div");
-      quickDiv.className = "quick-replies";
-      suggestions.forEach(s => {
-        const btn = document.createElement("div");
-        btn.className = "quick-reply";
-        btn.textContent = s;
-        btn.onclick = () => {
-          document.getElementById("chatInput").value = s;
-          this._handleSend();
-        };
-        quickDiv.appendChild(btn);
-      });
-      this.messageContainer.appendChild(quickDiv);
-    }
-
     this.messageContainer.scrollTop = this.messageContainer.scrollHeight;
   }
 
@@ -151,13 +137,14 @@ class ChatWidget {
 
 // Initialize widget
 window.onload = () => {
-  new ChatWidget("chat-widget", "http://localhost:5000/api");
+  new ChatWidget("chat-widget", "http://localhost:5000");
 };
-function appendMessage(sender, message){
-  const chatbox = document.querySelector(".chatbox"); // adjust selector if needed
-  const msgDiv = document.createElement("div");
-  msgDiv.classList.add("message");
-  msgDiv.innerHTML = `<strong>${sender}:</strong> ${message}`;
-  chatbox.appendChild(msgDiv);
-  chatbox.scrollTop = chatbox.scrollHeight;
-}
+// Get uploaded documents
+app.get("/documents", (req, res) => {
+  fs.readdir("uploads", (err, files) => {
+    if (err) return res.status(500).json({ error: "Cannot read uploads" });
+    // Return only PDF or TXT
+    const docs = files.filter(f => f.endsWith(".pdf") || f.endsWith(".txt"));
+    res.json(docs);
+  });
+});

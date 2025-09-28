@@ -16,6 +16,7 @@
       <a href="#" class="nav-link" data-target="about-section">About</a>
       <a href="#" class="nav-link" data-target="departments-section">Departments</a>
       <a href="#" class="nav-link" data-target="faqs-section">FAQs</a>
+      <a href="#" class="nav-link" data-target="circular">Circular</a>
       <a href="#">Contact</a>
     </nav>
   </header>
@@ -53,6 +54,55 @@
       <li>Timetable updates and exam schedules</li>
     </ul>
   </section>
+  <section id="circular" class="info-section">
+  <h2>Uploaded Circulars</h2>
+  <div id="circular-list">
+    <!-- Uploaded documents will appear here -->
+  
+</section>
+
+
+<script src="chatbot.js"></script>
+<script>
+  // Smooth scroll for navbar links
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = document.getElementById(link.dataset.target);
+      target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+async function loadCirculars() {
+    const container = document.getElementById("circular-list");
+    try {
+        const resp = await fetch("http://localhost:5000/documents");
+        const docs = await resp.json();
+        container.innerHTML = "";
+
+        if(docs.length === 0) {
+            container.innerHTML = "<p>No circulars uploaded yet.</p>";
+            return;
+        }
+
+        docs.forEach(doc => {
+            const link = document.createElement("a");
+            link.href = `uploads/${doc}`;
+            link.textContent = doc;
+            link.target = "_blank";
+            link.style.display = "block";
+            container.appendChild(link);
+        });
+    } catch (err) {
+        container.innerHTML = "<p>Error loading circulars.</p>";
+        console.error(err);
+    }
+}
+window.addEventListener("DOMContentLoaded", loadCirculars);
+</script>
+</body>
+</html>
+
 
   <!-- Footer -->
   <footer>
